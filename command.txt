@@ -1,0 +1,3 @@
+gcc -c -std=c++17 *.cpp && g++ *.o && ./a.out
+
+g++ *.cpp -o exec.out `root-config --cflags --glibs`
