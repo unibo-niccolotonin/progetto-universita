@@ -1,4 +1,5 @@
 #include "TFile.h"
+#include "TF1.h"
 #include "TH1.h"
 #include <iostream>
 
@@ -65,16 +66,16 @@ void analyze()
     // Angular functions fit
 
     phiHisto->Fit("pol0");
-    std::cout << "phi histogram chi squared: " << phiHisto->GetFunction("pol0")->GetChisquare();
+    std::cout << "phi histogram chi squared: " << phiHisto->GetFunction("pol0")->GetChisquare() << "\n";
 
     thetaHisto->Fit("pol0");
-    std::cout << "theta histogram chi squared: " << thetaHisto->GetFunction("pol0")->GetChisquare();
+    std::cout << "theta histogram chi squared: " << thetaHisto->GetFunction("pol0")->GetChisquare() << "\n";
 
     // Impulse fit
 
     impulseHisto->Fit("expo");
-    std::cout << "impulse histogram chi squared: " << impulseHisto->GetFunction("expo")->GetChisquare();
-    std::cout << "Impulse histogram mean: " << impulseHisto->GetFunction("expo")->GetParameter(0);
+    std::cout << "impulse histogram chi squared: " << impulseHisto->GetFunction("expo")->GetChisquare() << "\n";
+    std::cout << "Impulse histogram mean: " << impulseHisto->GetFunction("expo")->GetParameter(0) << "\n";
 
     //
     // Implementare la stampatura degli errori
@@ -82,19 +83,26 @@ void analyze()
 
     // Decayed fit
 
-    auto* firstComparisonHisto = invMassSameChargeKaonPionHisto - invMassDifChargeKaonPionHisto;
-    auto* firstDecayedFit = firstComparisonHisto->Fit(invMassDecayHisto);
+    auto* firstComparisonHisto = invMassSameChargeKaonPionHisto;
+	firstComparisonHisto->Add(invMassDifChargeKaonPionHisto, -1); 
 
-    std::cout << "firstComparisonHisto chi squared: " << firstDecayedFit->GetChiSquared();
+	double first_dec_fit = firstComparisonHisto->Chi2Test(invMassDecayHisto, "CHI2/NDF");
 
-    auto* secondComparisonHisto = invMassSameChargeHisto - invMassDifChargeHisto;
-    auto* secondDecayedFit = secondComparisonHisto->Fit(firstComparisonHisto);
+    std::cout << "firstComparisonHisto chi squared: " << first_dec_fit << "\n";
 
-    std::cout << "secondComparisonHisto chi squared: " << secondDecayedFit->GetChiSquared();
+    auto* secondComparisonHisto = invMassSameChargeHisto; 
+	secondComparisonHisto->Add( invMassDifChargeHisto, -1); 
 
-    auto* gaussianFit = firstComparisonHisto->Fit("gaus");
-    std::cout << "K* Mass: " << gaussianFit->getParameter(0);
-    std::cout << "K* Width: " << gaussianFit->getParameter(1);
+
+	double second_dec_fit = secondComparisonHisto->Chi2Test(firstComparisonHisto,"CHI2/NDF");
+
+    std::cout << "secondComparisonHisto chi squared: " << second_dec_fit << "\n";
+
+	firstComparisonHisto->Fit("gaus");
+
+
+    std::cout << "K* Mass: " << firstComparisonHisto->GetFunction("gaus")->GetParameter(0) << "\n";
+    std::cout << "K* Width: " << firstComparisonHisto->GetFunction("gaus")->GetParameter(1) << "\n";
 
     file->Close();
 }

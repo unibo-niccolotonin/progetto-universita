@@ -1,5 +1,6 @@
 #include "particle.h"
 #include "resonanceType.h"
+#include <memory>
 #include <string>
 #include <iostream>
 #include <map>
