@@ -1,6 +1,7 @@
 #include "TFile.h"
 #include "TF1.h"
 #include "TH1.h"
+#include "TStyle.h"
 #include <iostream>
 
 double chi_squared_bin(double totalEntries, double observed, double probability)
@@ -51,19 +52,16 @@ void analyze()
 
     std::cout << "Chi squared of type bins:\n";
 
-    using BinContent = typeHisto->GetBinContent;
-    using Bin = typeHisto->GetXaxis()->FindBin;
+    std::cout << "Pi+: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("Pi+")), 0.4) << "\n";
+    std::cout << "Pi-: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("Pi-")), 0.4) << "\n";
 
-    std::cout << "Pi+: " << chi_squared_bin(totalTypeEntries, BinContent(Bin("Pi+")), 0.4) << "\n";
-    std::cout << "Pi-: " << chi_squared_bin(totalTypeEntries, BinContent(Bin("Pi-")), 0.4) << "\n";
+    std::cout << "K+: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("K+")), 0.05) << "\n";
+    std::cout << "K-: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("K-")), 0.05) << "\n";
 
-    std::cout << "K+: " << chi_squared_bin(totalTypeEntries, BinContent(Bin("K+")), 0.05) << "\n";
-    std::cout << "K-: " << chi_squared_bin(totalTypeEntries, BinContent(Bin("K-")), 0.05) << "\n";
+    std::cout << "p+: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("p+")), 0.045) << "\n";
+    std::cout << "p-: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("p-")), 0.045) << "\n";
 
-    std::cout << "p+: " << chi_squared_bin(totalTypeEntries, BinContent(Bin("p+")), 0.045) << "\n";
-    std::cout << "p-: " << chi_squared_bin(totalTypeEntries, BinContent(Bin("p-")), 0.045) << "\n";
-
-    std::cout << "K*: " << chi_squared_bin(totalTypeEntries, BinContent(Bin("K*")), 0.01) << "\n";
+    std::cout << "K*: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("K*")), 0.01) << "\n";
 
     //
     // Implementare la stampatura degli errori

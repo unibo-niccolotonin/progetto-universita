@@ -16,11 +16,11 @@ void generate(int numEvents, int numParticles)
 
     auto* ALICEFile = new TFile("ALICE.root", "RECREATE");
 
-    auto* phiHisto = new TH1D("phiHisto", "phiHisto", 100, 0, 2 * TMath::Pi());
-    auto* thetaHisto = new TH1D("thetaHisto", "thetaHisto", 100, 0, TMath::Pi());
+    auto* phiHisto = new TH1D("phiHisto", "phiHisto", 140, 0, 2 * TMath::Pi());
+    auto* thetaHisto = new TH1D("thetaHisto", "thetaHisto", 140, 0, TMath::Pi());
     auto* typeHisto = new TH1I("typeHisto", "typehisto", 10, 0, 9);
-    auto* impulseHisto = new TH1D("impulseHisto", "impulseHisto", 90, 0, 5);
-    auto* energyHisto = new TH1D("energyHisto", "energyHisto", 100, 0, 5);
+    auto* impulseHisto = new TH1D("impulseHisto", "impulseHisto", 140, 0, 5);
+    auto* energyHisto = new TH1D("energyHisto", "energyHisto", 140, 0, 5);
     
     auto* invMassSameChargeHisto = new TH1D("invMassSameChargeHisto", "invMassSameChargeHisto", 100, 0, 5);
     auto* invMassDifChargeHisto = new TH1D("invMassDifChargeHisto", "invMassDifChargeHisto", 100, 0, 5);
