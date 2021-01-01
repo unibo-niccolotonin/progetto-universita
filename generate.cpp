@@ -16,17 +16,17 @@ void generate(int numEvents, int numParticles)
 
     auto* ALICEFile = new TFile("ALICE.root", "RECREATE");
 
-    auto* phiHisto = new TH1D("phiHisto", "phiHisto", 50, 0, 2 * TMath::Pi());
-    auto* thetaHisto = new TH1D("thetaHisto", "thetaHisto", 50, 0, TMath::Pi());
+    auto* phiHisto = new TH1D("phiHisto", "phiHisto", 100, 0, 2 * TMath::Pi());
+    auto* thetaHisto = new TH1D("thetaHisto", "thetaHisto", 100, 0, TMath::Pi());
     auto* typeHisto = new TH1I("typeHisto", "typehisto", 10, 0, 9);
-    auto* impulseHisto = new TH1D("impulseHisto", "impulseHisto", 40, 0, 5);
-    auto* energyHisto = new TH1D("energyHisto", "energyHisto", 50, 0, 5);
+    auto* impulseHisto = new TH1D("impulseHisto", "impulseHisto", 90, 0, 5);
+    auto* energyHisto = new TH1D("energyHisto", "energyHisto", 100, 0, 5);
     
-    auto* invMassSameChargeHisto = new TH1D("invMassSameChargeHisto", "invMassSameChargeHisto", 50, 0, 5);
-    auto* invMassDifChargeHisto = new TH1D("invMassDifChargeHisto", "invMassDifChargeHisto", 50, 0, 5);
-    auto* invMassSameChargeKaonPionHisto = new TH1D("invMassSameChargeKaonPionHisto", "invMassSameChargeKaonPionHisto", 50, 0, 5);
-    auto* invMassDifChargeKaonPionHisto = new TH1D("invMassDifChargeKaonPionHisto", "invMassDifChargeKaonPionHisto", 50, 0, 5);
-    auto* invMassDecayHisto = new TH1D("invMassDecayHisto", "invMassDecayHisto", 50, 0, 5);
+    auto* invMassSameChargeHisto = new TH1D("invMassSameChargeHisto", "invMassSameChargeHisto", 100, 0, 5);
+    auto* invMassDifChargeHisto = new TH1D("invMassDifChargeHisto", "invMassDifChargeHisto", 100, 0, 5);
+    auto* invMassSameChargeKaonPionHisto = new TH1D("invMassSameChargeKaonPionHisto", "invMassSameChargeKaonPionHisto", 100, 0, 5);
+    auto* invMassDifChargeKaonPionHisto = new TH1D("invMassDifChargeKaonPionHisto", "invMassDifChargeKaonPionHisto", 100, 0, 5);
+    auto* invMassDecayHisto = new TH1D("invMassDecayHisto", "invMassDecayHisto", 100, 0, 5);
 
     {
         int index = 1;
