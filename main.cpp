@@ -14,7 +14,7 @@ int main()
     Particle::addParticleType("K-", -1, 0.49367);
 
     Particle::addParticleType("p+", 1, 0.93827);
-    Particle::addParticleType("p-", 1, 0.93827);
+    Particle::addParticleType("p-", -1, 0.93827);
 
     Particle::addParticleType("K*", 0, 0.89166, 0.050);
 

@@ -4,14 +4,6 @@
 #include "TStyle.h"
 #include <iostream>
 
-double chi_squared_bin(double totalEntries, double observed, double probability)
-{
-    double expected = totalEntries * probability;
-    double sigmaSquared = expected * (1 - probability);
-
-    return ((observed - expected) * (observed - expected) / sigmaSquared);
-
-}
 
 void analyze()
 {
@@ -32,86 +24,68 @@ void analyze()
     TH1D* invMassDifChargeKaonPionHisto = (TH1D*)file->Get("invMassDifChargeKaonPionHisto")->Clone();
     TH1D* invMassDecayHisto = (TH1D*)file->Get("invMassDecayHisto")->Clone();
 
-    std::cout << "Number of entries in the histograms\n";
-
-    std::cout << "phiHisto:" << phiHisto->GetEntries() << "\n";
-    std::cout << "thetaHisto:" << thetaHisto->GetEntries() << "\n";
-    std::cout << "typeHisto:" << typeHisto->GetEntries() << "\n";
-    std::cout << "impulseHisto:" << impulseHisto->GetEntries() << "\n";
-    std::cout << "energyHisto:" << energyHisto->GetEntries() << "\n";
-
-    std::cout << "invMassSameChargeHisto:" << invMassSameChargeHisto->GetEntries() << "\n";
-    std::cout << "invMassDifChargeHisto:" << invMassDifChargeHisto->GetEntries() << "\n";
-    std::cout << "invMassSameChargeKaonPionHisto:" << invMassSameChargeKaonPionHisto->GetEntries() << "\n";
-    std::cout << "invMassDifChargeKaonPionHisto:" << invMassDifChargeKaonPionHisto->GetEntries() << "\n";
-    std::cout << "invMassDecayHisto:" << invMassDecayHisto->GetEntries() << "\n";
-
     //Check if the numbers of particle types agree with the a priori population ratio
 
-    auto totalTypeEntries = typeHisto->GetEntries();
+    std::cout << "Bin errors:\n";
 
-    std::cout << "Chi squared of type bins:\n";
-
-    std::cout << "Pi+: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("Pi+")), 0.4) << "\n";
-    std::cout << "Pi-: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("Pi-")), 0.4) << "\n";
-
-    std::cout << "K+: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("K+")), 0.05) << "\n";
-    std::cout << "K-: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("K-")), 0.05) << "\n";
-
-    std::cout << "p+: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("p+")), 0.045) << "\n";
-    std::cout << "p-: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("p-")), 0.045) << "\n";
-
-    std::cout << "K*: " << chi_squared_bin(totalTypeEntries, typeHisto->GetBinContent(typeHisto->GetXaxis()->FindBin("K*")), 0.01) << "\n";
-
-    //
-    // Implementare la stampatura degli errori
-    //
+    for (int i = 1; i < 11; i++)
+    {
+        std::cout << i <<": " << typeHisto->GetBinError(i) << "\n";
+    }
 
     // Angular functions fit
 
     phiHisto->Fit("pol0");
-    std::cout << "phi histogram chi squared: " << phiHisto->GetFunction("pol0")->GetChisquare() << "\n";
+    phiHisto->SetFillColor(kBlue);
+    phiHisto->GetXaxis()->SetTitle("rad");
 
     thetaHisto->Fit("pol0");
-    std::cout << "theta histogram chi squared: " << thetaHisto->GetFunction("pol0")->GetChisquare() << "\n";
-
+    thetaHisto->SetFillColor(kBlue);
+    thetaHisto->GetXaxis()->SetTitle("rad");
     // Impulse fit
 
     impulseHisto->Fit("expo");
+    impulseHisto->SetFillColor(kBlue);
+    impulseHisto->GetXaxis()->SetTitle("GeV/c^2");
+
     std::cout << "impulse histogram chi squared: " << impulseHisto->GetFunction("expo")->GetChisquare() << "\n";
     std::cout << "Impulse histogram mean: " << impulseHisto->GetFunction("expo")->GetParameter(0) << "\n";
 
-    //
-    // Implementare la stampatura degli errori
-    //
-
     // Decayed fit
+
+    invMassDecayHisto->Fit("gaus", "", "", 0.7, 1.1);
+    invMassDecayHisto->SetFillColor(kBlue);
+    invMassDecayHisto->GetXaxis()->SetTitle("GeV/c^2");
 
     TH1D* firstComparisonHisto = (TH1D*)invMassDifChargeKaonPionHisto->Clone();
     firstComparisonHisto->SetName("firstComparisonHisto");
-	firstComparisonHisto->Add(invMassSameChargeKaonPionHisto, -1); 
+    firstComparisonHisto->SetTitle("K* invariant mass Distribution (Kaon-Pion)");
+    firstComparisonHisto->GetXaxis()->SetTitle("GeV/c^2");
+    firstComparisonHisto->SetFillColor(kBlue);
 
-	double first_dec_fit = firstComparisonHisto->Chi2Test(invMassDecayHisto, "CHI2/NDF");
 
-    std::cout << "firstComparisonHisto chi squared/NDF: " << first_dec_fit << "\n";
+	firstComparisonHisto->Add(invMassSameChargeKaonPionHisto, -1);
+    
 
-    TH1D* secondComparisonHisto = (TH1D*)invMassSameChargeHisto->Clone();
+
+    TH1D* secondComparisonHisto = (TH1D*)invMassDifChargeHisto->Clone();
     secondComparisonHisto->SetName("secondComparisonHisto");
-	secondComparisonHisto->Add( invMassDifChargeHisto, -1); 
+    secondComparisonHisto->SetTitle("K* invariant mass Distribution");
+    secondComparisonHisto->GetXaxis()->SetTitle("GeV/c^2");
+    secondComparisonHisto->SetFillColor(kBlue);
+    
+	secondComparisonHisto->Add( invMassSameChargeHisto, -1);
 
 
-	double second_dec_fit = secondComparisonHisto->Chi2Test(firstComparisonHisto,"CHI2/NDF");
+    auto* f1 = new TF1("f1", "[0] + TMath::gaus([1], [2])", 0, 5);
 
-    std::cout << "secondComparisonHisto chi squared/NDF: " << second_dec_fit << "\n";
-
-	firstComparisonHisto->Fit("gaus");
-
-
-    std::cout << "K* Mass: " << firstComparisonHisto->GetFunction("gaus")->GetParameter(0) << "\n";
-    std::cout << "K* Width: " << firstComparisonHisto->GetFunction("gaus")->GetParameter(1) << "\n";
+	firstComparisonHisto->Fit("gaus","", "", 0.7, 1.1);
+    secondComparisonHisto->Fit("gaus","", "", 0.7, 1);
 
 
 	analyze_file->Write();
+
+    analyze_file->Close();
 
     file->Close();
 }

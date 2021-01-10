@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 #include <map>
-
+#include <stdexcept>
 #include <cmath>
 #include <cstdlib>
 
@@ -18,7 +18,7 @@ Particle::Particle(std::string type, double Px, double Py, double Pz)
     {
         std::cout << "The type you've entered isn't right you dummy!";
 
-        throw 0; // da sostituire
+        throw std::invalid_argument("Type specified hasn't been included in ParticleTypeTable");
     }
 
     fType = type;
@@ -35,7 +35,7 @@ void Particle::addParticleType(std::string name, double charge, double mass)
     if (particleTypeTable.count(name))
     {
         std::cout << "You've already added a particle called " << name << " dummy!";
-        throw 0; // da cambiare
+        throw std::invalid_argument("Particle type has already been added");
     }
 
     ++fNParticleType;
@@ -43,10 +43,9 @@ void Particle::addParticleType(std::string name, double charge, double mass)
     if (fNParticleType == fMaxNumParticleType)
     {
         std::cout << "You've added more than " << fMaxNumParticleType << " dummy!";
-        throw 0; // da cambiare
+        throw std::out_of_range("Exceeded maximum number of particle types"); // da cambiare
     }
 
-    //auto a = std::make_unique<ParticleType>(name, charge, mass); 
     particleTypeTable.emplace(name, std::make_unique<ParticleType>(name, charge, mass));
 }
 
@@ -56,7 +55,7 @@ void Particle::addParticleType(std::string name, double charge, double mass, dou
     if (particleTypeTable.count(name))
     {
         std::cout << "You've already added a particle called " << name << " dummy!";
-        throw 0; // da cambiare
+        throw std::invalid_argument("Particle type has already been added"); // da cambiare
     }
 
     ++fNParticleType;
@@ -64,7 +63,7 @@ void Particle::addParticleType(std::string name, double charge, double mass, dou
     if (fNParticleType == fMaxNumParticleType)
     {
         std::cout << "You've added more than " << fMaxNumParticleType << " dummy!";
-        throw 0; // da cambiare
+        throw std::out_of_range("Exceeded maximum number of particle types"); // da cambiare
     }
 
     //auto a = std::make_unique<ParticleType>(name, charge, mass); 
@@ -139,7 +138,7 @@ void Particle::setType(std::string type)
     } else 
     {
         std::cout << "The type You specified (" << type << ") doesn't exist you dummy!\n";
-        throw 2;
+        throw std::invalid_argument("Particle type specified doesn't exist");
     }
 
 }
